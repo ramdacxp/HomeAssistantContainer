@@ -1,32 +1,52 @@
 @echo off
 setlocal
 set BASE=%~dp0
-set CONFIG=%BASE%config
-set NAME=ha
+set NETWORK=hanet
+set HA_NAME=ha
+set HA_CONFIG=%BASE%config\ha
+set EH_NAME=esphome
+set EH_CONFIG=%BASE%config\esphome
 
-echo Starting Home Assistant Container ...
-echo Container name: %NAME%
-echo Configuration folder: %CONFIG%
+rem NETWORK
+echo Creating network %NETWORK% ...
+container network create %NETWORK%
 
-mkdir %CONFIG% 2>NUL
+rem HOME ASSISTANT
+echo Starting Home Assistant ...
+echo - Name: %HA_NAME%
+echo - Config: %HA_CONFIG%
+
+mkdir %HA_CONFIG% 2>NUL
 
 container run -d ^
-  --name %NAME% ^
+  --name %HA_NAME% ^
   -e TZ=Europe/Berlin ^
-  -v %CONFIG%:/config ^
+  -v %HA_CONFIG%:/config ^
   -p 8123:8123 ^
+  --network %NETWORK% ^
   --rm ^
   ghcr.io/home-assistant/home-assistant:stable
 
+REM ESPHOME
+echo Starting ESP Home ...
+echo - Name: %EH_NAME%
+echo - Config: %EH_CONFIG%
+
+mkdir %EH_CONFIG% 2>NUL
+
+container run -d ^
+  --name %EH_NAME% ^
+  -v %EH_CONFIG%:/config ^
+  -p 6052:6052 ^
+  --network %NETWORK% ^
+  --rm ^
+  ghcr.io/esphome/esphome
 
 echo.
 echo Available containers:
 container list
 
 echo.
-echo Local Home Assistant website:
-echo http://localhost:8123/
-
-echo.
-echo Done.
+echo Home Assistant: http://localhost:8123/
+echo ESP Home:       http://localhost:6052/
 endlocal

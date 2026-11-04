@@ -1,4 +1,8 @@
 @ echo off
-echo Stopping Home Assistant Container ...
+
+echo Stopping containers ...
 container stop ha
-container list -a
+container stop esphome
+
+echo Removing network ...
+container network remove hanet
