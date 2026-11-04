@@ -1,41 +1,21 @@
 # Home Assistant Container
 
-https://www.home-assistant.io/installation/raspberrypi-other#platform-installation
+This repo contains batch scripts to start Home Assistant Container and ESPHome Device Builder using WSLC on Windows 11.
 
-## Install
+![Apps in VSCode](images/screenshot.png)
 
-```bash
-docker run -d \
-  --name homeassistant \
-  --privileged \
-  --restart=unless-stopped \
-  -e TZ=MY_TIME_ZONE \
-  -v /PATH_TO_YOUR_CONFIG:/config \
-  -v /run/dbus:/run/dbus:ro \
-  --network=host \
-  ghcr.io/home-assistant/home-assistant:stable
-```
+## Commands
 
-## Update
+Requires WSL3 with WSLC on Windows 11.
 
-```bash
-# if this returns "Image is up to date" then you can stop here
-docker pull ghcr.io/home-assistant/home-assistant:stable
+* `run` - Create and start containers `ha` and `esphome` in shared network `hanet`.
+* `stop` - Stop and remove containers and network.
+* `remove` - Remove configuration files in `config` folder.
+* `remove /all` - Remove configuration files and prune container images.
+* `logs` - Show `ha` container logs.
 
-# stop the running container
-docker stop homeassistant
+## Links
 
-# remove it from Docker's list of containers
-docker rm homeassistant
-
-# finally, start a new one
-docker run -d \
-  --name homeassistant \
-  --restart=unless-stopped \
-  --privileged \
-  -e TZ=MY_TIME_ZONE \
-  -v /PATH_TO_YOUR_CONFIG:/config \
-  -v /run/dbus:/run/dbus:ro \
-  --network=host \
-  ghcr.io/home-assistant/home-assistant:stable
-```
+* [Home Assistant Container](https://www.home-assistant.io/installation/raspberrypi-other#platform-installation)
+* [ESPHome Device Builder](https://github.com/esphome/esphome-desktop)
+* [Running ESPHome in Docker](https://esphome.io/install/docker/)
